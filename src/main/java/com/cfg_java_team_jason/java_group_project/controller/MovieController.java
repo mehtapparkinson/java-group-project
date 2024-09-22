@@ -27,13 +27,13 @@ public class MovieController {
 
     }
 
-    @DeleteMapping ("/movies/{id}")
-    public void deleteMovie(@PathVariable int moviedId) {
-        if (movieRepository.existsById(moviedId)) {
-            movieRepository.deleteById(moviedId);
-            logger.info("Deleted movie: {}", moviedId);
+    @DeleteMapping ("/movies/{movieId}")
+    public void deleteMovie(@PathVariable int movieId) {
+        if (movieRepository.existsById(movieId)) {
+            movieRepository.deleteById(movieId);
+            logger.info("Deleted movie: {}", movieId);
         } else {
-            logger.error("Movie with id {} not found", moviedId);
+            logger.error("Movie with id {} not found", movieId);
         }
     }
 
