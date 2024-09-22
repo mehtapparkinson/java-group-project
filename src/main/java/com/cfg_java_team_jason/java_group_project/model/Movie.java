@@ -13,6 +13,7 @@ public class Movie {
     private int movie_id;
     private String title;
     private String genre;
+    @Column(name = "added_at")
     private LocalDate date;
 
 }
