@@ -27,8 +27,8 @@ public class MovieController {
 
     }
 
-    @DeleteMapping
-    public void deleteUser(@PathVariable int moviedId) {
+    @DeleteMapping ("/movies/{id}")
+    public void deleteMovie(@PathVariable int moviedId) {
         if (movieRepository.existsById(moviedId)) {
             movieRepository.deleteById(moviedId);
             logger.info("Deleted movie: {}", moviedId);
