@@ -6,10 +6,7 @@ import com.cfg_java_team_jason.java_group_project.repository.MovieRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,6 +31,21 @@ public class MovieController {
             logger.info("Deleted movie: {}", movieId);
         } else {
             logger.error("Movie with id {} not found", movieId);
+        }
+    }
+
+    @PostMapping("/movies")
+    public Movie addMovie(@RequestBody Movie movie) {
+        //validation for title, review, star
+        if (movie.getTitle().isEmpty() || movie.getReview().isEmpty()) {
+            logger.error("Please provide valid movie data");
+            throw new IllegalArgumentException("Please provide valid movie data");
+        } else if (movie.getStar() < 1 || movie.getStar() > 5) {
+            logger.error("Please provide a star rating between 1 and 5");
+            throw new IllegalArgumentException("Please provide a star rating between 1 and 5");
+        } else {
+            logger.info("Added movie: {}", movie.getTitle());
+            return movieRepository.save(movie);
         }
     }
 
