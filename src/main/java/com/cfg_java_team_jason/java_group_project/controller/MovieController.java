@@ -6,10 +6,7 @@ import com.cfg_java_team_jason.java_group_project.repository.MovieRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,7 +34,16 @@ public class MovieController {
         }
     }
 
+    @PutMapping("/movies/update/{movieId}")
+    public void updateMovie(@PathVariable int movieId, @RequestBody Movie movie) {
+        if (movieRepository.existsById(movieId)) {
+            movie.setMovie_id(movieId);
+            movieRepository.save(movie);
+            logger.info("Updated movie with id: {}", movieId);
+        } else {
+            logger.error("Movie with id {} not found", movieId);
+        }
+    }
+
 
 }
-
-
