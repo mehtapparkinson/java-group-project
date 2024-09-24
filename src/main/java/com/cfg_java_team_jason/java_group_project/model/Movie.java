@@ -14,7 +14,7 @@ public class Movie {
     private String title;
     private String review;
     @Column(name = "added_at")
-    private LocalDate date;
+    private LocalDate date = LocalDate.now();
     private int star;
 
 }
