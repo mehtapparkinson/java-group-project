@@ -12,8 +12,9 @@ public class Movie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int movie_id;
     private String title;
-    private String genre;
+    private String review;
     @Column(name = "added_at")
-    private LocalDate date;
+    private LocalDate date = LocalDate.now();
+    private int star;
 
 }
