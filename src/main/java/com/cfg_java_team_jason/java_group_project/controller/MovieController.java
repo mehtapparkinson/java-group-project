@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
-
 import java.util.List;
 
 
@@ -39,6 +38,18 @@ public class MovieController {
         }
     }
 
+
+    @PutMapping("/movies/update/{movieId}")
+    public void updateMovie(@PathVariable int movieId, @RequestBody Movie movie) {
+        if (movieRepository.existsById(movieId)) {
+            movie.setMovie_id(movieId);
+            movieRepository.save(movie);
+            logger.info("Updated movie with id: {}", movieId);
+        } else {
+            logger.error("Movie with id {} not found", movieId);
+        }
+    }
+
     @PostMapping("/movies")
     public Movie addMovie(@RequestBody Movie movie) {
         //validation for title, review, star
@@ -56,6 +67,8 @@ public class MovieController {
 
 
 
+
+
+
+
 }
-
-
