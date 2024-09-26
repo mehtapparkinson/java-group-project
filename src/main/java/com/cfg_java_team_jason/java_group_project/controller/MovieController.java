@@ -26,6 +26,16 @@ public class MovieController {
 
     }
 
+    @GetMapping("/movies/search")
+    public List<Movie> searchMoviesByTitle(@RequestParam String title){
+        logger.info("Searching movies with title: {}", title);
+        List<Movie> movies = movieRepository.findByTitle(title);
+        if (movies.isEmpty()) {
+            logger.warn("No movies found with title: {}", title);
+        }
+        return movies;
+    }
+
     @DeleteMapping("/movies/{movieId}")
     public ResponseEntity<String> deleteMovie(@PathVariable int movieId) {
         if (movieRepository.existsById(movieId)) {
