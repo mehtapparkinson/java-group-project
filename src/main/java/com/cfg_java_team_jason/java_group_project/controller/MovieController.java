@@ -6,9 +6,8 @@ import com.cfg_java_team_jason.java_group_project.repository.MovieRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpStatus;
 import java.util.List;
 
 
@@ -25,18 +24,17 @@ public class MovieController {
 
     }
 
+
     @DeleteMapping("/movies/{movieId}")
-    public ResponseEntity<String> deleteMovie(@PathVariable int movieId) {
-        if (movieRepository.existsById(movieId)) {
+    public void deleteMovie(@PathVariable int movieId){
+        try {
             movieRepository.deleteById(movieId);
-            logger.info("Deleted movie: {}", movieId);
-            return ResponseEntity.ok("Movie with ID " + movieId + " deleted successfully.");
-        } else {
-            logger.error("Movie with id {} not found", movieId);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Movie with ID " + movieId + " not found.");
+            logger.info("Deleted user: {}", movieId);
+        } catch (EmptyResultDataAccessException e) {
+            logger.info("Movie with id: {} not found", movieId);
         }
     }
+
 
 
     @PutMapping("/movies/update/{movieId}")
