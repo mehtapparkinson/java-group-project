@@ -34,7 +34,7 @@ public class MovieController {
             logger.info("Movie with id: {} not found", movieId);
         }
     }
-
+//TODO: add response entity to the delete endpoint?
 
 
     @PutMapping("/movies/update/{movieId}")
