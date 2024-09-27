@@ -17,5 +17,21 @@ public class MovieControllerTests {
 
 
     //TO DO
-
+    @Test
+    public void when_getAllMovies() throws Exception {
+        // GetMapping endpoint test
+    }
+    @Test
+    public void when_updateMovie() throws Exception {
+        // PutMapping endpoint test
+    }
+    @Test
+    public void when_deleteMovie() throws Exception {
+        // DeleteMapping endpoint test
+    }
+    @Test
+    public void when_addedMovie() throws Exception {
+        // PostMapping endpoint test
+    }
+}
 
