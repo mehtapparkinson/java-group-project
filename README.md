@@ -29,4 +29,34 @@ about each movie (e.g., title, personal review of each film, personal rating and
 5. **Exception Handling**: Implemented appropriate exception handling using custom exceptions and Spring's global exception handling features.
 6. **Docker**: The application will be containerized using Docker. We'll create a Dockerfile and Docker Compose file for easier deployment and scalability.
 7. **Logging**: We used SLF4J for logging throughout the application.
-  
+
+
+## Manual Test using Postman or Insomnia :clapper:
+
+1. **Add a Movie**
+- Input valid movie details (title, director, genre, etc.).
+- Verify the movie is saved correctly in the database.
+
+2. **View Movies**
+- Retrieve a list of movies and check if the information is correct.
+
+3. **Update a Movie**
+- Edit movie details and ensure the changes are reflected in the database.
+
+4. **Delete a Movie**
+- Delete a movie and verify it's removed from the database.
+
+## REST Endpoints :clapper:
+
+We will implement the following REST endpoints:
+
+1. **Add a Movie**
+- `POST /movies`
+- Request Body: JSON object with movie details.
+- Response: Success message and the created movie object.
+
+2. **Get All Movies**
+- `GET /movies`
+- Response: A list of all movies in the collection.
+
+**More endpoints**
