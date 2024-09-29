@@ -60,3 +60,47 @@ We will implement the following REST endpoints:
 - Response: A list of all movies in the collection.
 
 **More endpoints**
+
+## Database Setup :clapper:
+
+1. **MySQL**:  
+   A MySQL database was created using MySQL Workbench. The database schema will include a `movies` table with columns
+   corresponding to the movie attributes (title, director, etc.).
+
+2. **JPA Entities**:  
+   An entity class `Movie` was created that maps to the `movies` table in the database, and a repository interface
+   `MovieRepository` to handle CRUD operations.
+
+3. **MySQL Script**:  
+   The MySQL script for creating and initializing the database is provided in the `SQL` directory of the project.
+
+## Running Instructions :clapper:
+
+1. **Prerequisites**:
+- Java 21
+- MySQL
+- Docker (for containerization)
+
+2. **Steps**:
+- Clone the repository.
+- Set up the database using the MySQL script provided.
+- Run the application using `./mvnw spring-boot:run`.
+- Access the application at `http://localhost:8080`.
+
+## OpenAPI Specification :clapper:
+
+The OpenAPI specification for the REST API can be accessed at:  
+`[link]`
+
+## Deployment Plan :clapper:
+
+1. **Continuous Integration**:
+- GitHub Actions will be used for continuous integration, with stages for building, testing, and deploying the application.
+
+2. **Docker**:
+- The application will be containerized using Docker. A Dockerfile and a `docker-compose.yaml` will be provided to run the application along with a MySQL container.
+
+3. **Pipeline**:
+- **Stage 1**: Build and test the application.
+- **Stage 2**: Build Docker image.
+- **Stage 3**: Deploy the application using Docker Compose.
