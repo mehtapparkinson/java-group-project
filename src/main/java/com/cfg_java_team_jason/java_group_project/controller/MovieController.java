@@ -20,9 +20,16 @@ public class MovieController {
     private MovieRepository movieRepository;
 
     @GetMapping("/movies")
-    public List<Movie> getAllMovies(){
-        return movieRepository.findAll();
-
+    public ResponseEntity<List<Movie>> getAllMovies(){
+        List<Movie> movies = movieRepository.findAll();
+        if (movies.isEmpty()) {
+            //204 No Content
+            logger.warn("No movies found in the database.");
+            return ResponseEntity.noContent().build();
+        }
+        //200 OK
+        logger.info("Successfully retrieved {} movies from the database.", movies.size());
+        return ResponseEntity.ok(movies);
     }
 
     @DeleteMapping("/movies/{movieId}")
