@@ -87,4 +87,13 @@ public class MovieControllerTests {
                 // 204 No Content
                 .andExpect(status().isNoContent());
     }
+
+    @Test
+    @SneakyThrows
+    public void getAllMovies_ShouldReturnInternalServerError_WhenExceptionIsThrown() {
+        when(movieRepository.findAll()).thenThrow(new RuntimeException());
+        mockMvc.perform(get("/movies"))
+                // 500 Error
+                .andExpect(status().isInternalServerError());
+    }
 }
