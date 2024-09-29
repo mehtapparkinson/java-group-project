@@ -78,4 +78,13 @@ public class MovieControllerTests {
                 .andExpect(jsonPath("$[0].review").value("It could have been a dream, it could have been real, we will never know, but it was a great movie"))
                 .andExpect(jsonPath("$[1].review").value("Rose could have saved Jack, there was enough space on the door"));
     }
+
+    @Test
+    @SneakyThrows
+    public void getAllMovies_ShouldReturnNoContent_WhenNoMoviesExist() {
+        when(movieRepository.findAll()).thenReturn(List.of());
+        mockMvc.perform(get("/movies"))
+                // 204 No Content
+                .andExpect(status().isNoContent());
+    }
 }
