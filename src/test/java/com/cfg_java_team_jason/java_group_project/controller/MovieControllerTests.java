@@ -27,10 +27,6 @@ public class MovieControllerTests {
 
 
     //TO DO
-    @Test
-    public void when_getAllMovies() throws Exception {
-        // GetMapping endpoint test
-    }
 
     @Test
     public void when_updateMovie() throws Exception {
@@ -49,7 +45,7 @@ public class MovieControllerTests {
 
     @Test
     @SneakyThrows
-    public void getAllMovies_ShouldReturnListOfMovies_WhenMoviesExist() {
+    public void getAllMovies_ShouldReturnListOfMovies_WhenMoviesExist() throws Exception {
         // Create two movies
         Movie movie1 = new Movie();
         movie1.setMovie_id(1);
@@ -81,7 +77,7 @@ public class MovieControllerTests {
 
     @Test
     @SneakyThrows
-    public void getAllMovies_ShouldReturnNoContent_WhenNoMoviesExist() {
+    public void getAllMovies_ShouldReturnNoContent_WhenNoMoviesExist() throws Exception {
         when(movieRepository.findAll()).thenReturn(List.of());
         mockMvc.perform(get("/movies"))
                 // 204 No Content
@@ -90,7 +86,7 @@ public class MovieControllerTests {
 
     @Test
     @SneakyThrows
-    public void getAllMovies_ShouldReturnInternalServerError_WhenExceptionIsThrown() {
+    public void getAllMovies_ShouldReturnInternalServerError_WhenExceptionIsThrown() throws Exception {
         when(movieRepository.findAll()).thenThrow(new RuntimeException());
         mockMvc.perform(get("/movies"))
                 // 500 Error
