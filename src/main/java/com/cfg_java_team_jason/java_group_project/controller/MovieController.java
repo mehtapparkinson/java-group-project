@@ -21,9 +21,22 @@ public class MovieController {
     private MovieRepository movieRepository;
 
     @GetMapping("/movies")
-    public List<Movie> getAllMovies(){
-        return movieRepository.findAll();
-
+    public ResponseEntity<List<Movie>> getAllMovies(){
+        try {
+            List<Movie> movies = movieRepository.findAll();
+            if (movies.isEmpty()) {
+                //204 No Content
+                logger.warn("No movies found in the database.");
+                return ResponseEntity.noContent().build();
+            }
+        //200 OK
+        logger.info("Successfully retrieved {} movies from the database.", movies.size());
+        return ResponseEntity.ok(movies);
+        } catch (Exception e) {
+            //500 Error
+            logger.error("An error occurred while retrieving movies from the database.", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
 
