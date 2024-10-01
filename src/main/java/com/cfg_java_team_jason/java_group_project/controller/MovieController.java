@@ -51,17 +51,24 @@ public class MovieController {
     }
 
     @PostMapping("/movies")
-    public Movie addMovie(@RequestBody Movie movie) {
-        //validation for title, review, star
-        if (movie.getTitle().isEmpty() || movie.getReview().isEmpty()) {
-            logger.error("Please provide valid movie data");
-            throw new IllegalArgumentException("Please provide valid movie data");
-        } else if (movie.getStar() < 1 || movie.getStar() > 5) {
-            logger.error("Please provide a star rating between 1 and 5");
-            throw new IllegalArgumentException("Please provide a star rating between 1 and 5");
-        } else {
+    public ResponseEntity<?> addMovie(@RequestBody Movie movie) {
+        try {
+            // Validate
+            if (movie.getTitle() == null || movie.getTitle().isEmpty() || movie.getReview() == null || movie.getReview().isEmpty()) {
+                logger.error("Invalid movie data: Title or Review is missing");
+                return ResponseEntity.badRequest().body("Please provide valid movie data");
+            } else if (movie.getStar() < 1 || movie.getStar() > 5) {
+                logger.error("Invalid star rating: {}", movie.getStar());
+                return ResponseEntity.badRequest().body("Please provide a star rating between 1 and 5");
+            }
+            // Save
+            Movie savedMovie = movieRepository.save(movie);
             logger.info("Added movie: {}", movie.getTitle());
-            return movieRepository.save(movie);
+            return ResponseEntity.ok(savedMovie);
+        //Catch
+        } catch (Exception e) {
+            logger.error("Unexpected error occurred: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred while adding the movie");
         }
     }
 
