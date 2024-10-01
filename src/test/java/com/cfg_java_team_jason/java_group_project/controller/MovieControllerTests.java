@@ -69,16 +69,20 @@ public class MovieControllerTests {
                 .andExpect(status().isInternalServerError());
 
     }
+
+    @Test
+    @SneakyThrows
+    public void deleteMovie_ShouldReturn400_when_MovieIdIsNotAnInteger() throws Exception {
+
+        when(movieRepository.existsById(1)).thenThrow(new RuntimeException());
+
+        mockMvc.perform(delete("/movies/abc"))
+                .andExpect(status().isBadRequest());
+
+    }
 }
 
 
 
-    //TODO: mock behaviour when movie doesn't exist, invalid movie id like string
 
-
-//    @Test
-//    public void when_addedMovie() throws Exception {
-//        // PostMapping endpoint test
-//    }
-//}
 
