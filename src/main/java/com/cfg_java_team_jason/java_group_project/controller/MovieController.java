@@ -61,14 +61,22 @@ public class MovieController {
 
 
     @PutMapping("/movies/update/{movieId}")
-    public void updateMovie(@PathVariable int movieId, @RequestBody Movie movie) {
-        if (movieRepository.existsById(movieId)) {
-            movie.setMovie_id(movieId);
-            movieRepository.save(movie);
-            logger.info("Updated movie with id: {}", movieId);
-        } else {
-            logger.error("Movie with id {} not found", movieId);
-        }
+    public ResponseEntity <String> updateMovie(@PathVariable int movieId, @RequestBody Movie movie) {
+       try{
+           if (movieRepository.existsById(movieId)) {
+               movie.setMovie_id(movieId);
+               movieRepository.save(movie);
+               logger.info("Updated movie with id: {}", movieId);
+               return ResponseEntity.ok("Movie with ID " + movieId + " updated successfully.");
+           } else {
+               logger.warn("Movie with id {} not found", movieId);
+               return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                       .body("Movie with ID " + movieId + " not found.");
+           }
+       } catch (Exception e) {
+           logger.error("An error occurred while updating a movie to the database.", e);
+           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+       }
     }
 
     @PostMapping("/movies")
