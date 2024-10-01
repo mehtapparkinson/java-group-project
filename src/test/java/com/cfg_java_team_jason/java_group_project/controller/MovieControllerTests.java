@@ -74,8 +74,6 @@ public class MovieControllerTests {
     @SneakyThrows
     public void deleteMovie_ShouldReturn400_when_MovieIdIsNotAnInteger() throws Exception {
 
-        when(movieRepository.existsById(1)).thenThrow(new RuntimeException());
-
         mockMvc.perform(delete("/movies/abc"))
                 .andExpect(status().isBadRequest());
 
