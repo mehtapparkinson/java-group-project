@@ -17,6 +17,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+
+
 @WebMvcTest(MovieController.class)
 public class MovieControllerTests {
 
@@ -33,14 +37,50 @@ public class MovieControllerTests {
         // PutMapping endpoint test
     }
 
+
+    // delete tests section
+  
     @Test
-    public void when_deleteMovie() throws Exception {
-        // DeleteMapping endpoint test
+    @SneakyThrows
+    public void deleteMovie_ShouldDeleteMovie_when_MovieExists() throws Exception {
+        //arrange the movie to exist, mock delete, check if it deleted
+
+        when(movieRepository.existsById(1)).thenReturn(true);
+
+        mockMvc.perform(delete("/movies/1"))
+                .andExpect(status().isOk());
+
     }
 
     @Test
-    public void when_addedMovie() throws Exception {
-        // PostMapping endpoint test
+    @SneakyThrows
+    public void deleteMovie_ShouldReturn404_when_MovieDoesNotExist() throws Exception {
+
+        when(movieRepository.existsById(1)).thenReturn(false);
+
+        mockMvc.perform(delete("/movies/1"))
+                .andExpect(status().isNotFound());
+
+    }
+
+    @Test
+    @SneakyThrows
+    public void deleteMovie_ShouldReturn500_when_ExceptionThrown() throws Exception {
+
+        when(movieRepository.existsById(1)).thenThrow(new RuntimeException());
+
+        mockMvc.perform(delete("/movies/1"))
+                .andExpect(status().isInternalServerError());
+
+    }
+
+    @Test
+    @SneakyThrows
+    public void deleteMovie_ShouldReturn400_when_MovieIdIsNotAnInteger() throws Exception {
+
+        mockMvc.perform(delete("/movies/abc"))
+                .andExpect(status().isBadRequest());
+
     }
 
     @Test
@@ -93,3 +133,4 @@ public class MovieControllerTests {
                 .andExpect(status().isInternalServerError());
     }
 }
+
