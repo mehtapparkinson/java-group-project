@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -26,15 +28,23 @@ public class MovieController {
 
 
     @DeleteMapping("/movies/{movieId}")
-    public void deleteMovie(@PathVariable int movieId){
+    public ResponseEntity<String> deleteMovie(@PathVariable int movieId) {
         try {
-            movieRepository.deleteById(movieId);
-            logger.info("Deleted user: {}", movieId);
-        } catch (EmptyResultDataAccessException e) {
-            logger.info("Movie with id: {} not found", movieId);
+            if (movieRepository.existsById(movieId)) {
+                movieRepository.deleteById(movieId);
+                logger.info("Deleted movie: {}", movieId);
+                return ResponseEntity.ok("Movie with ID " + movieId + " deleted successfully.");
+            } else {
+                logger.error("Movie with id {} not found", movieId);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Movie with ID " + movieId + " not found.");
+            }
+        } catch (Exception e) {
+        //500 Error
+        logger.error("An error occurred while deleting movies from the database.", e);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-//TODO: add response entity to the delete endpoint?
 
 
     @PutMapping("/movies/update/{movieId}")
