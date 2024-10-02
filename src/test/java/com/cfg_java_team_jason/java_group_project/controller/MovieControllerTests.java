@@ -7,6 +7,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
@@ -84,9 +88,7 @@ public class MovieControllerTests {
     }
 
     @Test
-    @SneakyThrows
     public void getAllMovies_ShouldReturnListOfMovies_WhenMoviesExist() throws Exception {
-        // Create two movies
         Movie movie1 = new Movie();
         movie1.setMovie_id(1);
         movie1.setTitle("Inception");
@@ -101,18 +103,19 @@ public class MovieControllerTests {
         movie2.setDate(LocalDate.of(2023, 12, 19));
         movie2.setStar(4);
 
-        // Mock the findAll method
-        when(movieRepository.findAll()).thenReturn(List.of(movie1, movie2));
+        Pageable pageable = PageRequest.of(0, 50);
+        Page<Movie> moviePage = new PageImpl<>(List.of(movie1, movie2), pageable, 2);
 
-        // Get the response
+        when(movieRepository.findAll(pageable)).thenReturn(moviePage);
+
         mockMvc.perform(get("/movies"))
                 // 200 OK
                 .andExpect(status().isOk())
                 // Check if the response has the correct values
-                .andExpect(jsonPath("$[0].title").value("Inception"))
-                .andExpect(jsonPath("$[1].title").value("Titanic"))
-                .andExpect(jsonPath("$[0].review").value("It could have been a dream, it could have been real, we will never know, but it was a great movie"))
-                .andExpect(jsonPath("$[1].review").value("Rose could have saved Jack, there was enough space on the door"));
+                .andExpect(jsonPath("$.content[0].title").value("Inception"))
+                .andExpect(jsonPath("$.content[1].title").value("Titanic"))
+                .andExpect(jsonPath("$.content[0].review").value("It could have been a dream, it could have been real, we will never know, but it was a great movie"))
+                .andExpect(jsonPath("$.content[1].review").value("Rose could have saved Jack, there was enough space on the door"));
     }
 
     @Test
