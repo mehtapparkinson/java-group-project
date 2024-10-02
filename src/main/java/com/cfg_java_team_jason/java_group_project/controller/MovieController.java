@@ -48,7 +48,7 @@ public class MovieController {
                 logger.info("Deleted movie: {}", movieId);
                 return ResponseEntity.ok("Movie with ID " + movieId + " deleted successfully.");
             } else {
-                logger.error("Movie with id {} not found", movieId);
+                logger.warn("Movie with id {} not found", movieId);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body("Movie with ID " + movieId + " not found.");
             }
