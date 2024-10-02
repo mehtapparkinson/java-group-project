@@ -75,7 +75,6 @@ public class MovieControllerTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(movieJson))
                 .andExpect(status().isInternalServerError());
-
     }
 
     // delete tests section
