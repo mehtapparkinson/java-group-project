@@ -9,11 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
-@RestController
+@Controller
 public class MovieController {
     private static final Logger logger = LoggerFactory.getLogger(MovieController.class);
 
@@ -61,50 +63,58 @@ public class MovieController {
 
 
     @PutMapping("/movies/{movieId}")
-    public ResponseEntity <?> updateMovie(@PathVariable int movieId, @RequestBody Movie movie) {
-       try{
-           if (movieRepository.existsById(movieId)) {
-               movie.setMovie_id(movieId);
-               Movie updatedMovie = movieRepository.save(movie);
-               logger.info("Updated movie with id: {}", movieId);
-               return ResponseEntity.ok(updatedMovie);
-           } else {
-               logger.warn("Movie with id {} not found", movieId);
-               return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                       .body("Movie with ID " + movieId + " not found.");
-           }
-       } catch (Exception e) {
-           logger.error("An error occurred while updating a movie to the database.", e);
-           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-       }
-    }
-
-    @PostMapping("/movies")
-    public ResponseEntity<?> addMovie(@RequestBody Movie movie) {
+    public ResponseEntity<?> updateMovie(@PathVariable int movieId, @RequestBody Movie movie) {
         try {
-            // Validate
-            if (movie.getTitle() == null || movie.getTitle().isEmpty() || movie.getReview() == null || movie.getReview().isEmpty()) {
-                logger.error("Invalid movie data: Title or Review is missing");
-                return ResponseEntity.badRequest().body("Please provide valid movie data");
-            } else if (movie.getStar() < 1 || movie.getStar() > 5) {
-                logger.error("Invalid star rating: {}", movie.getStar());
-                return ResponseEntity.badRequest().body("Please provide a star rating between 1 and 5");
+            if (movieRepository.existsById(movieId)) {
+                movie.setMovie_id(movieId);
+                Movie updatedMovie = movieRepository.save(movie);
+                return ResponseEntity.ok(updatedMovie);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Movie with ID " + movieId + " not found.");
             }
-            // Save
-            Movie savedMovie = movieRepository.save(movie);
-            logger.info("Added movie: {}", movie.getTitle());
-            return ResponseEntity.ok(savedMovie);
-        //Catch
         } catch (Exception e) {
-            logger.error("Unexpected error occurred: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred while adding the movie");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
 
+    @PostMapping("/movies")
+    public String addMovie(@ModelAttribute Movie movie) {
+        if (movie.getTitle().isEmpty() || movie.getReview().isEmpty()) {
+            logger.error("Please provide valid movie data");
+            throw new IllegalArgumentException("Please provide valid movie data");
+        } else if (movie.getStar() < 1 || movie.getStar() > 5) {
+            logger.error("Please provide a star rating between 1 and 5");
+            throw new IllegalArgumentException("Please provide a star rating between 1 and 5");
+        } else {
+            logger.info("Added movie: {}", movie.getTitle());
+            movieRepository.save(movie);
+            return "redirect:/movies/view";
+        }
+    }
+
+    @GetMapping("/movies/view")
+    public String viewMovies(Model model) {
+        List<Movie> movies = movieRepository.findAll();
+        model.addAttribute("movies", movies);
+
+        double avgRating = movies.stream()
+                .mapToDouble(Movie::getStar)
+                .average()
+                .orElse(0.0);
+
+        avgRating = Math.round(avgRating * 10.0) / 10.0;
+        model.addAttribute("avgRating", avgRating);
+        return "movies";
+    }
 
 
-
-
+    @GetMapping("/movies/edit/{movieId}")
+    public String editMovie(@PathVariable int movieId, Model model) {
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid movie Id:" + movieId));
+        model.addAttribute("movie", movie);
+        return "edit_movie";
+    }
 
 }
