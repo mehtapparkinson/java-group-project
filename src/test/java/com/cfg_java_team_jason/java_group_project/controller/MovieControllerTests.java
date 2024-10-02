@@ -29,12 +29,6 @@ public class MovieControllerTests {
     private MovieRepository movieRepository;
 
 
-    //TO DO
-
-    //update movie when movie exists
-    // return not found when movie doesnt exist
-    //return 500 when exception is thrown
-
     // PutMapping endpoint test
 
     @Test
@@ -64,12 +58,24 @@ public class MovieControllerTests {
     public void updateMovie_ShouldReturn404_when_MovieDoesNotExists() throws Exception {
 
         when(movieRepository.existsById(1)).thenReturn(false);
-        String movieJson = "{ \"title\": \"Test Title\", \"review\": \"Test Review\", \"star\": 3 }";
+        String movieJson = "{ \"title\": \"Updated Title\", \"review\": \"Updated Review\", \"star\": 5 }";
 
         mockMvc.perform(put("/movies/{id}", 1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(movieJson))
                 .andExpect(status().isNotFound());
+    }
+    @Test
+    public void updateMovie_ShouldReturn500_when_ExceptionIsThrown() throws Exception {
+
+        when(movieRepository.existsById(1)).thenThrow(new RuntimeException());
+        String movieJson = "{ \"title\": \"Updated Title\", \"review\": \"Updated Review\", \"star\": 5 }";
+
+        mockMvc.perform(put("/movies/{id}", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(movieJson))
+                .andExpect(status().isInternalServerError());
+
     }
 
     // delete tests section
