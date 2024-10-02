@@ -7,18 +7,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
 
 @WebMvcTest(MovieController.class)
@@ -32,9 +32,40 @@ public class MovieControllerTests {
 
     //TO DO
 
+    //update movie when movie exists
+    // return not found when movie doesnt exist
+    //return 500 when exception is thrown
+
+    // PutMapping endpoint test
+
+
     @Test
-    public void when_updateMovie() throws Exception {
-        // PutMapping endpoint test
+    public void updateMovie_ShouldUpdateMovie_when_MovieExists() throws Exception {
+
+        //mock data
+        Movie existingMovie = new Movie();
+        existingMovie.setTitle("Original Title");
+        existingMovie.setReview("Original Review");
+        existingMovie.setDate(LocalDate.of(2022, 12, 12));
+        existingMovie.setStar(3);
+
+        Movie updatedMovie = new Movie();
+        updatedMovie.setTitle("Updated Title");
+        updatedMovie.setReview("Updated Review");
+        updatedMovie.setDate(LocalDate.of(2024, 1, 1));
+        updatedMovie.setStar(5);
+
+        when(movieRepository.existsById(1)).thenReturn(true);
+        when(movieRepository.save(any(Movie.class))).thenReturn(updatedMovie);
+
+        mockMvc.perform(put("/movies/update/{id}", 1))
+                .andExpect(jsonPath("$.title").value("Updated Title"))
+                .andExpect(jsonPath("$.review").value("Updated Review"))
+                .andExpect(jsonPath("$.date").value((2024- 1- 1)))
+                .andExpect(jsonPath("$.star").value(5));
+
+        verify(movieRepository, times(1)).save(any(Movie.class));
+
     }
 
 
