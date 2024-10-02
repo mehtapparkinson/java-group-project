@@ -61,13 +61,13 @@ public class MovieController {
 
 
     @PutMapping("/movies/{movieId}")
-    public ResponseEntity <String> updateMovie(@PathVariable int movieId, @RequestBody Movie movie) {
+    public ResponseEntity <?> updateMovie(@PathVariable int movieId, @RequestBody Movie movie) {
        try{
            if (movieRepository.existsById(movieId)) {
                movie.setMovie_id(movieId);
-               movieRepository.save(movie);
+               Movie updatedMovie = movieRepository.save(movie);
                logger.info("Updated movie with id: {}", movieId);
-               return ResponseEntity.ok("Movie with ID " + movieId + " updated successfully.");
+               return ResponseEntity.ok(updatedMovie);
            } else {
                logger.warn("Movie with id {} not found", movieId);
                return ResponseEntity.status(HttpStatus.NOT_FOUND)
