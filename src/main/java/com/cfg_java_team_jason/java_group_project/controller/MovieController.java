@@ -67,7 +67,7 @@ public class MovieController {
 
 
     @PutMapping("/movies/{movieId}")
-    public ResponseEntity <?> updateMovie(@PathVariable int movieId, @RequestBody Movie movie) {
+    public ResponseEntity <?> updateMovie(@PathVariable int movieId, @Valid @RequestBody Movie movie) {
        try{
            if (movieRepository.existsById(movieId)) {
                movie.setMovie_id(movieId);
