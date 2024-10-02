@@ -51,16 +51,25 @@ public class MovieControllerTests {
 
         String updatedMovieJson = "{ \"title\": \"Updated Title\", \"review\": \"Updated Review\", \"star\": 5 }";
 
-
         mockMvc.perform(put("/movies/{id}", 1)
                 .contentType(MediaType.APPLICATION_JSON)  // Ensure content type is JSON
                 .content(updatedMovieJson))
                 .andExpect(status().isOk())
                 .andExpect(content().json( "{ \"title\": \"Updated Title\", \"review\": \"Updated Review\", \"star\": 5 }"));
 
-
         verify(movieRepository, times(1)).save(any(Movie.class));
 
+    }
+    @Test
+    public void updateMovie_ShouldReturn404_when_MovieDoesNotExists() throws Exception {
+
+        when(movieRepository.existsById(1)).thenReturn(false);
+        String movieJson = "{ \"title\": \"Test Title\", \"review\": \"Test Review\", \"star\": 3 }";
+
+        mockMvc.perform(put("/movies/{id}", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(movieJson))
+                .andExpect(status().isNotFound());
     }
 
     // delete tests section
