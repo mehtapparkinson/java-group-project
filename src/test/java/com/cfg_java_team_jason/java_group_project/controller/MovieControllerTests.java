@@ -15,10 +15,9 @@ import java.util.List;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @WebMvcTest(MovieController.class)
@@ -38,36 +37,31 @@ public class MovieControllerTests {
 
     // PutMapping endpoint test
 
-
     @Test
     public void updateMovie_ShouldUpdateMovie_when_MovieExists() throws Exception {
 
         //mock data
-        Movie existingMovie = new Movie();
-        existingMovie.setTitle("Original Title");
-        existingMovie.setReview("Original Review");
-        existingMovie.setDate(LocalDate.of(2022, 12, 12));
-        existingMovie.setStar(3);
-
         Movie updatedMovie = new Movie();
         updatedMovie.setTitle("Updated Title");
         updatedMovie.setReview("Updated Review");
-        updatedMovie.setDate(LocalDate.of(2024, 1, 1));
         updatedMovie.setStar(5);
 
         when(movieRepository.existsById(1)).thenReturn(true);
         when(movieRepository.save(any(Movie.class))).thenReturn(updatedMovie);
 
-        mockMvc.perform(put("/movies/update/{id}", 1))
-                .andExpect(jsonPath("$.title").value("Updated Title"))
-                .andExpect(jsonPath("$.review").value("Updated Review"))
-                .andExpect(jsonPath("$.date").value((2024- 1- 1)))
-                .andExpect(jsonPath("$.star").value(5));
+        String updatedMovieJson = "{ \"title\": \"Updated Title\", \"review\": \"Updated Review\", \"star\": 5 }";
+
+
+        mockMvc.perform(put("/movies/{id}", 1)
+                .contentType(MediaType.APPLICATION_JSON)  // Ensure content type is JSON
+                .content(updatedMovieJson))
+                .andExpect(status().isOk())
+                .andExpect(content().json( "{ \"title\": \"Updated Title\", \"review\": \"Updated Review\", \"star\": 5 }"));
+
 
         verify(movieRepository, times(1)).save(any(Movie.class));
 
     }
-
 
     // delete tests section
   
