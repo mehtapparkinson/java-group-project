@@ -119,13 +119,17 @@ public class MovieControllerTests {
     }
 
     @Test
-    @SneakyThrows
     public void getAllMovies_ShouldReturnNoContent_WhenNoMoviesExist() throws Exception {
-        when(movieRepository.findAll()).thenReturn(List.of());
+        Pageable pageable = PageRequest.of(0, 50);
+        Page<Movie> emptyPage = new PageImpl<>(List.of(), pageable, 0);
+
+        when(movieRepository.findAll(pageable)).thenReturn(emptyPage);
+
         mockMvc.perform(get("/movies"))
                 // 204 No Content
                 .andExpect(status().isNoContent());
     }
+
 
     @Test
     @SneakyThrows
