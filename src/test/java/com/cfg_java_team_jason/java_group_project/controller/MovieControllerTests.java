@@ -132,9 +132,11 @@ public class MovieControllerTests {
 
 
     @Test
-    @SneakyThrows
     public void getAllMovies_ShouldReturnInternalServerError_WhenExceptionIsThrown() throws Exception {
-        when(movieRepository.findAll()).thenThrow(new RuntimeException());
+        Pageable pageable = PageRequest.of(0, 50);
+
+        when(movieRepository.findAll(pageable)).thenThrow(new RuntimeException());
+
         mockMvc.perform(get("/movies"))
                 // 500 Error
                 .andExpect(status().isInternalServerError());
