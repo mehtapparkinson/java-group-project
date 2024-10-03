@@ -123,7 +123,6 @@ public class MovieControllerTests {
     }
 
     @Test
-    @SneakyThrows
     public void getAllMovies_ShouldReturnListOfMovies_WhenMoviesExist() throws Exception {
         // Create two movies
         Movie movie1 = new Movie();
@@ -155,7 +154,6 @@ public class MovieControllerTests {
     }
 
     @Test
-    @SneakyThrows
     public void getAllMovies_ShouldReturnNoContent_WhenNoMoviesExist() throws Exception {
         when(movieRepository.findAll()).thenReturn(List.of());
         mockMvc.perform(get("/movies"))
@@ -164,7 +162,6 @@ public class MovieControllerTests {
     }
 
     @Test
-    @SneakyThrows
     public void getAllMovies_ShouldReturnInternalServerError_WhenExceptionIsThrown() throws Exception {
         when(movieRepository.findAll()).thenThrow(new RuntimeException());
         mockMvc.perform(get("/movies"))

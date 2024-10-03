@@ -3,14 +3,20 @@ package com.cfg_java_team_jason.java_group_project.controller;
 
 import com.cfg_java_team_jason.java_group_project.model.Movie;
 import com.cfg_java_team_jason.java_group_project.repository.MovieRepository;
+
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -61,7 +67,7 @@ public class MovieController {
 
 
     @PutMapping("/movies/{movieId}")
-    public ResponseEntity <?> updateMovie(@PathVariable int movieId, @RequestBody Movie movie) {
+    public ResponseEntity <?> updateMovie(@PathVariable int movieId, @Valid @RequestBody Movie movie) {
        try{
            if (movieRepository.existsById(movieId)) {
                movie.setMovie_id(movieId);
@@ -80,25 +86,21 @@ public class MovieController {
     }
 
     @PostMapping("/movies")
-    public ResponseEntity<?> addMovie(@RequestBody Movie movie) {
-        try {
-            // Validate
-            if (movie.getTitle() == null || movie.getTitle().isEmpty() || movie.getReview() == null || movie.getReview().isEmpty()) {
-                logger.error("Invalid movie data: Title or Review is missing");
-                return ResponseEntity.badRequest().body("Please provide valid movie data");
-            } else if (movie.getStar() < 1 || movie.getStar() > 5) {
-                logger.error("Invalid star rating: {}", movie.getStar());
-                return ResponseEntity.badRequest().body("Please provide a star rating between 1 and 5");
-            }
-            // Save
-            Movie savedMovie = movieRepository.save(movie);
-            logger.info("Added movie: {}", movie.getTitle());
-            return ResponseEntity.ok(savedMovie);
-        //Catch
-        } catch (Exception e) {
-            logger.error("Unexpected error occurred: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred while adding the movie");
-        }
+    public ResponseEntity<Movie> addMovie(@Valid @RequestBody Movie movie) {
+        Movie savedMovie = movieRepository.save(movie);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedMovie);
+    }
+
+    //Handles validation errors of @Valid. Returns corresponding error messages to the client.
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException e) {
+        Map<String, String> errors = new HashMap<>();
+        e.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
 
