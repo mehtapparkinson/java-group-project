@@ -7,19 +7,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(MovieController.class)
 public class MovieControllerTests {
@@ -30,16 +28,58 @@ public class MovieControllerTests {
     private MovieRepository movieRepository;
 
 
-    //TO DO
+    // PutMapping endpoint test
 
     @Test
-    public void when_updateMovie() throws Exception {
-        // PutMapping endpoint test
+    public void updateMovie_ShouldUpdateMovie_when_MovieExists() throws Exception {
+
+        //mock data
+        Movie updatedMovie = new Movie();
+        updatedMovie.setTitle("Updated Title");
+        updatedMovie.setReview("Updated Review");
+        updatedMovie.setStar(5);
+
+        when(movieRepository.existsById(1)).thenReturn(true);
+        when(movieRepository.save(any(Movie.class))).thenReturn(updatedMovie);
+
+        String updatedMovieJson = "{ \"title\": \"Updated Title\", \"review\": \"Updated Review\", \"star\": 5 }";
+
+        mockMvc.perform(put("/movies/{id}", 1)
+                        .contentType(MediaType.APPLICATION_JSON)  // Ensure content type is JSON
+                        .content(updatedMovieJson))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{ \"title\": \"Updated Title\", \"review\": \"Updated Review\", \"star\": 5 }"));
+
+        verify(movieRepository, times(1)).save(any(Movie.class));
+
     }
 
+    @Test
+    public void updateMovie_ShouldReturn404_when_MovieDoesNotExists() throws Exception {
+
+        when(movieRepository.existsById(1)).thenReturn(false);
+        String movieJson = "{ \"title\": \"Updated Title\", \"review\": \"Updated Review\", \"star\": 5 }";
+
+        mockMvc.perform(put("/movies/{id}", 1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(movieJson))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void updateMovie_ShouldReturn500_when_ExceptionIsThrown() throws Exception {
+
+        when(movieRepository.existsById(1)).thenThrow(new RuntimeException());
+        String movieJson = "{ \"title\": \"Updated Title\", \"review\": \"Updated Review\", \"star\": 5 }";
+
+        mockMvc.perform(put("/movies/{id}", 1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(movieJson))
+                .andExpect(status().isInternalServerError());
+    }
 
     // delete tests section
-  
+
     @Test
     @SneakyThrows
     public void deleteMovie_ShouldDeleteMovie_when_MovieExists() throws Exception {
@@ -84,7 +124,6 @@ public class MovieControllerTests {
     }
 
     @Test
-    @SneakyThrows
     public void getAllMovies_ShouldReturnListOfMovies_WhenMoviesExist() throws Exception {
         // Create two movies
         Movie movie1 = new Movie();
@@ -116,7 +155,6 @@ public class MovieControllerTests {
     }
 
     @Test
-    @SneakyThrows
     public void getAllMovies_ShouldReturnNoContent_WhenNoMoviesExist() throws Exception {
         when(movieRepository.findAll()).thenReturn(List.of());
         mockMvc.perform(get("/movies"))
@@ -125,12 +163,70 @@ public class MovieControllerTests {
     }
 
     @Test
-    @SneakyThrows
     public void getAllMovies_ShouldReturnInternalServerError_WhenExceptionIsThrown() throws Exception {
         when(movieRepository.findAll()).thenThrow(new RuntimeException());
         mockMvc.perform(get("/movies"))
                 // 500 Error
                 .andExpect(status().isInternalServerError());
     }
-}
 
+    @Test
+    public void when_addedMovie_ValidMovie() throws Exception {
+        Movie movie = new Movie();
+        movie.setTitle("Inception");
+        movie.setReview("Great movie!");
+        movie.setStar(5);
+
+        when(movieRepository.save(any(Movie.class))).thenReturn(movie);
+
+        mockMvc.perform(post("/movies")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"Inception\", \"review\":\"Great movie!\", \"star\":5}"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{\"title\":\"Inception\", \"review\":\"Great movie!\", \"star\":5}"));
+
+        verify(movieRepository, times(1)).save(any(Movie.class));
+    }
+
+    @Test
+    public void when_addedMovie_InvalidTitle () throws Exception {
+            mockMvc.perform(post("/movies")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("{\"title\":\"\", \"review\":\"Good movie!\", \"star\":4}"))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(content().string("Please provide valid movie data"));
+
+            verify(movieRepository, times(0)).save(any(Movie.class));
+    }
+
+    @Test
+    public void when_addedMovie_InvalidStarRating () throws Exception {
+            mockMvc.perform(post("/movies")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("{\"title\":\"The Dark Knight\", \"review\":\"Best superhero movie!\", \"star\":6}"))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(content().string("Please provide a star rating between 1 and 5"));
+
+            verify(movieRepository, times(0)).save(any(Movie.class));
+    }
+
+    @Test
+    public void when_addedMovie_UnexpectedError () throws Exception {
+            Movie movie = new Movie();
+            movie.setTitle("Interstellar");
+            movie.setReview("Amazing visuals");
+            movie.setStar(5);
+
+            when(movieRepository.save(any(Movie.class))).thenThrow(new RuntimeException("Database error"));
+
+            mockMvc.perform(post("/movies")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("{\"title\":\"Interstellar\", \"review\":\"Amazing visuals\", \"star\":5}"))
+                    .andExpect(status().isInternalServerError())
+                    .andExpect(content().string("An unexpected error occurred while adding the movie"));
+
+            verify(movieRepository, times(1)).save(any(Movie.class));
+
+    }
+
+}
