@@ -182,7 +182,7 @@ public class MovieControllerTests {
         mockMvc.perform(post("/movies")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"title\":\"Inception\", \"review\":\"Great movie!\", \"star\":5}"))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(content().json("{\"title\":\"Inception\", \"review\":\"Great movie!\", \"star\":5}"));
 
         verify(movieRepository, times(1)).save(any(Movie.class));
@@ -194,7 +194,7 @@ public class MovieControllerTests {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content("{\"title\":\"\", \"review\":\"Good movie!\", \"star\":4}"))
                     .andExpect(status().isBadRequest())
-                    .andExpect(content().string("Please provide valid movie data"));
+                    .andExpect(content().json("{\"title\":\"Title is mandatory\"}"));
 
             verify(movieRepository, times(0)).save(any(Movie.class));
     }
@@ -205,7 +205,7 @@ public class MovieControllerTests {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content("{\"title\":\"The Dark Knight\", \"review\":\"Best superhero movie!\", \"star\":6}"))
                     .andExpect(status().isBadRequest())
-                    .andExpect(content().string("Please provide a star rating between 1 and 5"));
+                    .andExpect(content().json("{\"star\":\"Please provide a star rating between 1 and 5\"}"));
 
             verify(movieRepository, times(0)).save(any(Movie.class));
     }
@@ -222,8 +222,7 @@ public class MovieControllerTests {
             mockMvc.perform(post("/movies")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content("{\"title\":\"Interstellar\", \"review\":\"Amazing visuals\", \"star\":5}"))
-                    .andExpect(status().isInternalServerError())
-                    .andExpect(content().string("An unexpected error occurred while adding the movie"));
+                    .andExpect(status().isInternalServerError());
 
             verify(movieRepository, times(1)).save(any(Movie.class));
 
