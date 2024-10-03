@@ -22,8 +22,8 @@ public class Movie {
     private String review;
     @Column(name = "added_at")
     private LocalDate date = LocalDate.now();
-    @Min(value = 1, message = "Star rating must be at least 1")
-    @Max(value = 5, message = "Star rating must be less than 5")
+    @Min(value = 1, message = "Please provide a star rating between 1 and 5")
+    @Max(value = 5, message = "Please provide a star rating between 1 and 5")
     private int star;
 
 }
