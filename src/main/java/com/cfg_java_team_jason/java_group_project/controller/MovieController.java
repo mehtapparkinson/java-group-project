@@ -109,4 +109,25 @@ public class MovieController {
     }
 
 
+    @GetMapping("/movies/search")
+    public ResponseEntity<?> searchMoviesByTitle(@RequestParam String title) {
+        logger.info("Searching movies with title: {}", title);
+
+        try {
+            List<Movie> movies = movieRepository.findByTitle(title);
+
+            if (movies.isEmpty()) {
+                logger.warn("No movies found with title: {}", title);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("No movies found with title: " + title);
+            }
+
+            return ResponseEntity.ok(movies);
+        } catch (Exception e) {
+            logger.error("Error occurred while searching for movies: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while searching for movies");
+        }
+    }
+
 }
