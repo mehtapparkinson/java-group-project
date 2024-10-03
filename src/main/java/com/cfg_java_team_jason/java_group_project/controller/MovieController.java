@@ -87,8 +87,13 @@ public class MovieController {
 
     @PostMapping("/movies")
     public ResponseEntity<Movie> addMovie(@Valid @RequestBody Movie movie) {
-        Movie savedMovie = movieRepository.save(movie);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedMovie);
+        try {
+            Movie savedMovie = movieRepository.save(movie);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedMovie);
+        } catch (Exception e) {
+            logger.error("An error occurred while adding movies from the database.", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     //Handles validation errors of @Valid. Returns corresponding error messages to the client.
@@ -102,11 +107,6 @@ public class MovieController {
         });
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
-
-
-
-
-
 
 
 }
