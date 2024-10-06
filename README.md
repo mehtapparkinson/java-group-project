@@ -31,7 +31,7 @@ than by features. Each layer has a specific role:
 - Data is stored in a MySQL database, and the application provides REST endpoints to interact with this data.
 
 
-## How We Will Achieve This
+## How We Have Achieved This
 
 1. **Spring Boot Application**: A Spring Boot application was created  using the Spring Initializr to generate the necessary project structure.
 2. **REST Endpoints**: We implemented RESTful endpoints to perform CRUD operations (Create, Read, Update, Delete) on movie data.
@@ -42,7 +42,8 @@ than by features. Each layer has a specific role:
 7. **Logging**: We used SLF4J for logging throughout the application.
 
 
-## Manual Test using Postman or Insomnia 
+## Manual Test using
+Postman or Insomnia 
 
 1. **Add a Movie**
 - Input valid movie details (title, review, date added and star(s).
@@ -59,8 +60,6 @@ than by features. Each layer has a specific role:
 
 ## REST Endpoints
 
-We will implement the following REST endpoints:
-
 1. **Add a Movie**
 - `POST /movies`
 - Request Body: JSON object with movie details.
@@ -70,7 +69,22 @@ We will implement the following REST endpoints:
 - `GET /movies`
 - Response: A list of all movies in the collection.
 
-**More endpoints**
+3. **Get A Movie by title**
+- `GET /movies?=title`
+- Request Query Parameters: Movie title as a query parameter.
+- Response: The movie object that matches the provided title.
+
+4. **Delete a Movie**
+- `DELETE /movies/{id}`
+- Request Parameters: Movie ID in the URL.
+- Response: Success message confirming the movie has been deleted.
+
+4. **Update a Movies**
+- `PUT /movies/{id}`
+- Request Parameters: Movie ID in the URL.
+- Request Body: JSON object with updated movie details.
+- Response: Success message and the updated movie object.
+
 
 ## Database Setup
 
@@ -87,21 +101,26 @@ We will implement the following REST endpoints:
 
 ## Running Instructions
 
-1. **Prerequisites**:
+**1. Prerequisites**:
 - Java 21
 - MySQL
 - Docker (for containerization)
 
-2. **Steps**:
+**2. Steps**:
 - Clone the repository.
 - Set up the database using the MySQL script provided.
 - Run the application using `./mvnw spring-boot:run`.
 - Access the application at `http://localhost:8080`.
 
-## OpenAPI Specification
+### OpenAPI Specification
 
 The OpenAPI specification for the REST API can be accessed at:  
-`[link]`
+- [**OpenAPI JSON Spec**](http://localhost:8080/v3/api-docs)
+- [**Swagger UI**](http://localhost:8080/swagger-ui.html)
+
+### Manual Testing of API 
++ [**Postman**](https://www.postman.com/) 
++ [**Insomnia**](https://insomnia.rest/)
 
 ## Deployment Plan
 
