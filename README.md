@@ -27,7 +27,7 @@ than by features. Each layer has a specific role:
     - Movie title
     - Personal review
     - Date added movie to collection (DB)
-    -  Star Rating 
+    - Star Rating 
 - Data is stored in a MySQL database, and the application provides REST endpoints to interact with this data.
 
 
@@ -42,8 +42,9 @@ than by features. Each layer has a specific role:
 7. **Logging**: We used SLF4J for logging throughout the application.
 
 
-## Manual Test using
-Postman or Insomnia 
+## Manual Test Plan of API
+**Using [**Postman**](https://www.postman.com/) or 
+[**Insomnia**](https://insomnia.rest/)**
 
 1. **Add a Movie**
 - Input valid movie details (title, review, date added and star(s).
@@ -58,7 +59,7 @@ Postman or Insomnia
 4. **Delete a Movie**
 - Delete a movie and verify it's removed from the database.
 
-## REST Endpoints
+## RESTful Endpoints
 
 1. **Add a Movie**
 - `POST /movies`
@@ -79,7 +80,7 @@ Postman or Insomnia
 - Request Parameters: Movie ID in the URL.
 - Response: Success message confirming the movie has been deleted.
 
-4. **Update a Movies**
+5. **Update a Movies**
 - `PUT /movies/{id}`
 - Request Parameters: Movie ID in the URL.
 - Request Body: JSON object with updated movie details.
@@ -133,6 +134,18 @@ This file contains 14 tests:
 - Set up the database using the MySQL script provided.
 - Run the application using `./mvnw spring-boot:run`.
 - Access the application at `http://localhost:8080`.
+
+## Editing Configuration
+To change any configuration such as database credentials, edit the .env file
+
+#### **Example .env file:**
+
+````
+SPRING_DATASOURCE_URL= url
+SPRING_DATASOURCE_USERNAME= username
+SPRING_DATASOURCE_PASSWORD= password
+
+````
 
 ### OpenAPI Specification
 
