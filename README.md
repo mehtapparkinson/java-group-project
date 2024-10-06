@@ -8,21 +8,32 @@ The **Movie Tracker System** is a Spring Boot application designed to help users
 It allows users to perform actions such as adding new movies, viewing their movie collection, and tracking details
 about each movie (e.g., title, personal review of each film, personal rating and date added).
 
-## Application Requirements :clapper:
+## Project Architecture:
+
+This project follows a **Package by Layer** architecture, organizing the codebase by technical responsibilities rather 
+than by features. Each layer has a specific role:
+
+### Package by Layer:
+
+- **Controller**: `MovieController` handles incoming API requests and directing them to the appropriate service.
+- **Repository**: `MovieRepository` interfaces with the database.
+- **Model**: `Movie` represents the data model for the Movies table.
+
+## Application Requirements 
 
 - The system allows users to manage a collection of movies.
 - Users can add, view, update, and delete movies from their collection.
 - Each movie will have attributes such as:
-    - Title
+    - Movie title
     - Personal review
-    - Date added
-    - Rating 
+    - Date added movie to collection (DB)
+    -  Star Rating 
 - Data is stored in a MySQL database, and the application provides REST endpoints to interact with this data.
 
 
-## How We Will Achieve This :clapper:
+## How We Will Achieve This
 
-1. **Spring Boot Application**: A Spring Boot was created application using the Spring Initializr to generate the necessary project structure.
+1. **Spring Boot Application**: A Spring Boot application was created  using the Spring Initializr to generate the necessary project structure.
 2. **REST Endpoints**: We implemented RESTful endpoints to perform CRUD operations (Create, Read, Update, Delete) on movie data.
 3. **Database Integration**: MySQL was used as the database for storing movie information. Spring Data JPA was used to manage the interactions between the application and the database.
 4. **Unit Testing**:  JUnit was used for unit testing and Mockito to mock external dependencies.
@@ -31,10 +42,10 @@ about each movie (e.g., title, personal review of each film, personal rating and
 7. **Logging**: We used SLF4J for logging throughout the application.
 
 
-## Manual Test using Postman or Insomnia :clapper:
+## Manual Test using Postman or Insomnia 
 
 1. **Add a Movie**
-- Input valid movie details (title, director, genre, etc.).
+- Input valid movie details (title, review, date added and star(s).
 - Verify the movie is saved correctly in the database.
 
 2. **View Movies**
@@ -46,7 +57,7 @@ about each movie (e.g., title, personal review of each film, personal rating and
 4. **Delete a Movie**
 - Delete a movie and verify it's removed from the database.
 
-## REST Endpoints :clapper:
+## REST Endpoints
 
 We will implement the following REST endpoints:
 
@@ -61,7 +72,7 @@ We will implement the following REST endpoints:
 
 **More endpoints**
 
-## Database Setup :clapper:
+## Database Setup
 
 1. **MySQL**:  
    A MySQL database was created using MySQL Workbench. The database schema will include a `movies` table with columns
@@ -74,7 +85,7 @@ We will implement the following REST endpoints:
 3. **MySQL Script**:  
    The MySQL script for creating and initializing the database is provided in the `SQL` directory of the project.
 
-## Running Instructions :clapper:
+## Running Instructions
 
 1. **Prerequisites**:
 - Java 21
@@ -87,12 +98,12 @@ We will implement the following REST endpoints:
 - Run the application using `./mvnw spring-boot:run`.
 - Access the application at `http://localhost:8080`.
 
-## OpenAPI Specification :clapper:
+## OpenAPI Specification
 
 The OpenAPI specification for the REST API can be accessed at:  
 `[link]`
 
-## Deployment Plan :clapper:
+## Deployment Plan
 
 1. **Continuous Integration**:
 - GitHub Actions will be used for continuous integration, with stages for building, testing, and deploying the application.
