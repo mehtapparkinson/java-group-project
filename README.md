@@ -86,6 +86,28 @@ Postman or Insomnia
 - Response: Success message and the updated movie object.
 
 
+# Testing Subscription Controller MVC Test
+
+Unit tests were written for the `MovieController` using Spring's Mvc framework in combination with Mockito. The aim was
+to validate the functionality by simulating HTTP requests and checking the responses without running the full Spring
+Boot application server.
+This file contains 14 tests:
++ updateMovie_ShouldUpdateMovie_when_MovieExists()
++ updateMovie_ShouldReturn404_when_MovieDoesNotExists()
++ updateMovie_ShouldReturn500_when_ExceptionIsThrown()
++ deleteMovie_ShouldDeleteMovie_when_MovieExists()
++ deleteMovie_ShouldReturn404_when_MovieDoesNotExist()
++ deleteMovie_ShouldReturn500_when_ExceptionThrown()
++ deleteMovie_ShouldReturn400_when_MovieIdIsNotAnInteger()
++ getAllMovies_ShouldReturnListOfMovies_WhenMoviesExist()
++ getAllMovies_ShouldReturnNoContent_WhenNoMoviesExist()
++ getAllMovies_ShouldReturnInternalServerError_WhenExceptionIsThrown()
++ when_addedMovie_ValidMovie()
++ when_addedMovie_InvalidTitle ()
++ when_addedMovie_InvalidStarRating ()
++ when_addedMovie_UnexpectedError ()
+
+
 ## Database Setup
 
 1. **MySQL**:  
