@@ -8,6 +8,10 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -27,19 +31,19 @@ public class MovieController {
     private MovieRepository movieRepository;
 
     @GetMapping("/movies")
-    public ResponseEntity<List<Movie>> getAllMovies(){
+    public ResponseEntity<Page<Movie>> getAllMovies(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "50") int size) {
         try {
-            List<Movie> movies = movieRepository.findAll();
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Movie> movies = movieRepository.findAll(pageable);
             if (movies.isEmpty()) {
-                //204 No Content
                 logger.warn("No movies found in the database.");
                 return ResponseEntity.noContent().build();
             }
-        //200 OK
-        logger.info("Successfully retrieved {} movies from the database.", movies.size());
-        return ResponseEntity.ok(movies);
+            logger.info("Successfully retrieved {} movies from the database.", movies.getTotalElements());
+            return ResponseEntity.ok(movies);
         } catch (Exception e) {
-            //500 Error
             logger.error("An error occurred while retrieving movies from the database.", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
