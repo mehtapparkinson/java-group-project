@@ -1,0 +1,27 @@
+version: '3.8'
+
+
+services:
+  db:
+    image: mysql:8.0
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_DATABASE: MovieTrackerDB
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - /Users/zuzannaboguslawska/Documents/GitHub/java-group-project/SQL/starter-code-latest.sql
+  #   the above must be an absolute path
+
+
+  movie-tracker:
+    image:   de70cbb0c5ea
+    depends_on:
+      - db  # Ensure the app starts only after the database container is ready
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/MovieTrackerDB
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
