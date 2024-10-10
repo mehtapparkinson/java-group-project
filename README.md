@@ -117,6 +117,12 @@ Unit tests were written for the `MovieController` using Spring's Mvc framework i
 to validate the functionality by simulating HTTP requests and checking the responses without running the full Spring
 Boot application server.
 
+### Key Libraries Used:
++ **JUnit 5**: Used for writing unit tests.
++ **Mockito**: Mocking dependencies for isolated tests.
++ **MockMvc**: For testing the controller layer without starting the full Spring application.
+
+
 This file contains 14 tests:
 + updateMovie_ShouldUpdateMovie_when_MovieExists()
 + updateMovie_ShouldReturn404_when_MovieDoesNotExists()
