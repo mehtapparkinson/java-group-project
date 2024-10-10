@@ -157,8 +157,30 @@ This file contains 14 tests:
 + when_addedMovie_UnexpectedError ()
 
 
+### Docker Setup
+#### Understanding the Docker Compose Configuration:
+This project uses Docker Compose to run the following services:
 
-## Running the Application with Docker using Docker Desktop:
+1. App (Spring Boot Application): Runs the your-app-name.jar inside a Docker container.
+2. MySQL Database: Runs MySQL 8.0 and initializes the MovieTrackerDB database.
+
+
+The database/ directory contains SQL scripts that will automatically be executed when the database container is created.
+Place any initialization SQL files (such as table schemas and seed data) inside src/main/resources/database/.
+
+#### Using the Dockerfile
+The Dockerfile builds a Docker image of the Spring Boot application:
+
++ The target/your-app-name.jar is copied into the Docker container.
++ The app runs on port 8080.
++
+#### The docker-compose.yml file:
+Configures the Spring Boot application and MySQL database to run together.
+Sets up environment variables for database configuration.
+
+Once the application is running, you can interact with it via HTTP requests.
+
+## Running the Application with Docker 
 The below example demonstrates how to connect a java-group-project to a MySQL database using Docker.
 The Library Service will send data to the database via endpoints, which can then be testing in Postman.
 
@@ -184,7 +206,8 @@ If everything is correct, the program should run, and you’ll be able to access
 Postman without needing to run the program from IntelliJ. Since you're now running it from the executable file, 
 once you're done testing, you can safely close it.
 
-#### Docker file
+#### Create Dockerfile and place in root directory.
+file contents should be:
 ```
  FROM eclipse-temurin:21-jdk     # Adujust if usuing java 22 (or whatever you are using)
  WORKDIR /src
@@ -192,6 +215,13 @@ once you're done testing, you can safely close it.
  EXPOSE 8080
  ENTRYPOINT ["java", "-jar", "java-group-project.jar"]
 ```
+Build the Docker Image with the command:
+````
+docker build -t java-group-project
+````
+
+Verify on DockerDesktop that both Images are there.
+
 Create the docker-compose.yml file in the root directory of the project.
 
 ```
@@ -252,29 +282,6 @@ If you've made changes to your code or Dockerfile, rebuild the containers:
 ````
 docker-compose up --build
 ````
-
-### Docker Setup
-#### Understanding the Docker Compose Configuration:
-This project uses Docker Compose to run the following services:
-
-1. App (Spring Boot Application): Runs the your-app-name.jar inside a Docker container.
-2. MySQL Database: Runs MySQL 8.0 and initializes the MovieTrackerDB database.
-
-
-The database/ directory contains SQL scripts that will automatically be executed when the database container is created.
-Place any initialization SQL files (such as table schemas and seed data) inside src/main/resources/database/.
-
-#### Using the Dockerfile
-The Dockerfile builds a Docker image of the Spring Boot application:
-
-+ The target/your-app-name.jar is copied into the Docker container.
-+ The app runs on port 8080.
-+ 
-#### The docker-compose.yml file:
-Configures the Spring Boot application and MySQL database to run together.
-Sets up environment variables for database configuration.
-
-Once the application is running, you can interact with it via HTTP requests.
 
 
 
