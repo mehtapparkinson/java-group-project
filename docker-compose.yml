@@ -1,0 +1,23 @@
+
+services:
+  db:
+    image: mysql:latest
+    ports:
+      - "3306:3306"  # Maps port 3306 on the host to port 3306 in the container, allowing external access to the MySQL server.
+    environment:
+      MYSQL_DATABASE: MovieTrackerDB  # Sets the name of the default database that will be created.
+      MYSQL_ROOT_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}  # Defines the root password for the MySQL instance.
+    volumes:
+      - /Users/LAILAALBOLOUSHI/Desktop/java-group-project/src/main/resources/database:/docker-entrypoint-initdb.d
+
+  java-group-project:
+    image: f07858af4f58a72c553cd3437a4ebbd24d6035e6e07bfb4e5f258de681af5ed1  # Uses the image for the Spring Boot application.
+    depends_on:
+      - db  # Ensures that the database service is started before this application.
+    ports:
+      - "8080:8080"  # Maps port 8080 on the host to port 8080 in the container for the Spring Boot application.
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/MovieTrackerDB  # Specifies the JDBC URL to connect to the MySQL database running in the 'db' container.
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver  # Sets the MySQL JDBC driver class.
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}  # Username for connecting to the MySQL database.
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}  # Password for connecting to the MySQL database.
