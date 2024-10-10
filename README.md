@@ -8,20 +8,9 @@ The **Movie Tracker System** is a Spring Boot application designed to help users
 It allows users to perform actions such as adding new movies, viewing their movie collection, and tracking details
 about each movie (e.g., title, personal review of each film, personal rating and date added).
 
-## Project Architecture:
+## Application Requirements (Must Haves)
 
-This project follows a **Package by Layer** architecture, organizing the codebase by technical responsibilities rather 
-than by features. Each layer has a specific role:
-
-### Package by Layer:
-
-- **Controller**: `MovieController` handles incoming API requests and directing them to the appropriate service.
-- **Repository**: `MovieRepository` interfaces with the database.
-- **Model**: `Movie` represents the data model for the Movies table.
-
-## Application Requirements 
-
-- The system allows users to manage a collection of movies.
+- A system that allows users to manage a collection of movies.
 - Users can add, view, update, and delete movies from their collection.
 - Each movie will have attributes such as:
     - Movie title
@@ -30,7 +19,6 @@ than by features. Each layer has a specific role:
     - Star Rating 
 - Data is stored in a MySQL database, and the application provides REST endpoints to interact with this data.
 
-
 ## How We Have Achieved This
 
 1. **Spring Boot Application**: A Spring Boot application was created  using the Spring Initializr to generate the necessary project structure.
@@ -38,13 +26,11 @@ than by features. Each layer has a specific role:
 3. **Database Integration**: MySQL was used as the database for storing movie information. Spring Data JPA was used to manage the interactions between the application and the database.
 4. **Unit Testing**:  JUnit was used for unit testing and Mockito to mock external dependencies.
 5. **Exception Handling**: Implemented appropriate exception handling using custom exceptions and Spring's global exception handling features.
-6. **Docker**: The application will be containerized using Docker. We'll create a Dockerfile and Docker Compose file for easier deployment and scalability.
+6. **Docker**: The application is containerized using Docker. We have created a Dockerfile and Docker Compose file for 
+7. easier deployment and scalability.
 7. **Logging**: We used SLF4J for logging throughout the application.
 
-
-## Manual Test Plan of API
-**Using [**Postman**](https://www.postman.com/) or 
-[**Insomnia**](https://insomnia.rest/)**
+## Manual Test Plan:
 
 1. **Add a Movie**
 - Input valid movie details (title, review, date added and star(s).
@@ -58,6 +44,17 @@ than by features. Each layer has a specific role:
 
 4. **Delete a Movie**
 - Delete a movie and verify it's removed from the database.
+
+## Project Architecture:
+
+This project follows a **Package by Layer** architecture, organizing the codebase by technical responsibilities rather
+than by features. Each layer has a specific role:
+
+### Package by Layer:
+
+- **Controller**: `MovieController` handles incoming API requests and directing them to the appropriate service.
+- **Repository**: `MovieRepository` interfaces with the database.
+- **Model**: `Movie` represents the data model for the Movies table.
 
 ## RESTful Endpoints
 
@@ -86,8 +83,18 @@ than by features. Each layer has a specific role:
 - Request Body: JSON object with updated movie details.
 - Response: Success message and the updated movie object.
 
+### OpenAPI Specification
 
-# Testing Subscription Controller MVC Test
+The OpenAPI specification for the REST API can be accessed at:
+- [**OpenAPI JSON Spec**](http://localhost:8080/v3/api-docs)
+- [**Swagger UI**](http://localhost:8080/swagger-ui.html)
+
+### Manual Testing of API
++ [**Postman**](https://www.postman.com/)
++ [**Insomnia**](https://insomnia.rest/)
+
+
+## Testing Subscription Controller MVC Test
 
 Unit tests were written for the `MovieController` using Spring's Mvc framework in combination with Mockito. The aim was
 to validate the functionality by simulating HTTP requests and checking the responses without running the full Spring
@@ -147,25 +154,77 @@ SPRING_DATASOURCE_PASSWORD= password
 
 ````
 
-### OpenAPI Specification
-
-The OpenAPI specification for the REST API can be accessed at:  
-- [**OpenAPI JSON Spec**](http://localhost:8080/v3/api-docs)
-- [**Swagger UI**](http://localhost:8080/swagger-ui.html)
-
-### Manual Testing of API 
-+ [**Postman**](https://www.postman.com/) 
-+ [**Insomnia**](https://insomnia.rest/)
-
 ## Deployment Plan
 
 1. **Continuous Integration**:
 - GitHub Actions will be used for continuous integration, with stages for building, testing, and deploying the application.
 
 2. **Docker**:
-- The application will be containerized using Docker. A Dockerfile and a `docker-compose.yaml` will be provided to run the application along with a MySQL container.
+- The application is containerized using Docker. A Dockerfile and a `docker-compose.yaml` will be provided to run the
+application along with a MySQL container.
+
+
+## Running the Application with Docker:
+#### Docker file
+Step 1: Start the Application with Docker Compose
+You can run the Spring Boot app and MySQL database using Docker Compose. The following command builds the Docker 
+image and starts both services:
+````
+docker-compose up 
+````
+
+Step 2: Access the Application
+Once the containers are up, the application will be available at:
+
+```
+http://localhost:8080
+```
+The MySQL database will be running on port 3306. If you want to check MySQL via a MySQL client or use admin tools
+like MySQL Workbench, connect to localhost:3306 with the credentials:
+
++ Username: root
++ Password: yourpassword
+
+
+Step 3: Stopping the Application
+When you're done, stop the containers using:
+
+```
+docker-compose down
+```
+
+Step 4: Rebuilding the Containers
+If you've made changes to your code or Dockerfile, rebuild the containers:
+
+````
+docker-compose up --build
+````
+
+### Docker Setup
+#### Understanding the Docker Compose Configuration:
+This project uses Docker Compose to run the following services:
+
+1. App (Spring Boot Application): Runs the your-app-name.jar inside a Docker container.
+2. MySQL Database: Runs MySQL 8.0 and initializes the MovieTrackerDB database.
+
+
+The database/ directory contains SQL scripts that will automatically be executed when the database container is created.
+Place any initialization SQL files (such as table schemas and seed data) inside src/main/resources/database/.
+
+#### Using the Dockerfile
+The Dockerfile builds a Docker image of the Spring Boot application:
+
++ The target/your-app-name.jar is copied into the Docker container.
++ The app runs on port 8080.
++ 
+#### The docker-compose.yml file:
+Configures the Spring Boot application and MySQL database to run together.
+Sets up environment variables for database configuration.
+
+Once the application is running, you can interact with it via HTTP requests.
 
 3. **Pipeline**:
 - **Stage 1**: Build and test the application.
 - **Stage 2**: Build Docker image.
 - **Stage 3**: Deploy the application using Docker Compose.
+
