@@ -158,15 +158,31 @@ This file contains 14 tests:
 
 
 
-## Running the Application with Docker:
+## Running the Application with Docker using Docker Desktop:
 The below example demonstrates how to connect a java-group-project to a MySQL database using Docker.
 The Library Service will send data to the database via endpoints, which can then be testing in Postman.
 
-*The process consists of three parts:*
+**The process consists of three parts:**
 
-Creating a MySQL Image
-Creating an Image for the Library Service Application Download Library Service application
-Running the docker-compose.yml file to allow the two images to communicate.
++ Creating a MySQL Image
++ Creating an Image for the CineLog Application
++ Running the docker-compose.yml file to allow the two images to communicate.
+
+
+1. Download the MySQL image using Docker Desktop or the terminal.
+````
+docker pull mysql
+````
+2. Create an Image for the CineLog App
+Create the JAR file for your application in IntelliJ through the maven tab, under the LifeCycle directory execute clean
+then package. This will generate a JAR file for your Spring Boot application in the target/ directory.
+Example :
+````
+java-group-project-0.0.1-SNAPSHOT.jar
+````
+If everything is correct, the program should run, and you’ll be able to access your endpoints through a browser or
+Postman without needing to run the program from IntelliJ. Since you're now running it from the executable file, 
+once you're done testing, you can safely close it.
 
 #### Docker file
 ```
