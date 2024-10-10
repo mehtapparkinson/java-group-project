@@ -19,6 +19,13 @@ about each movie (e.g., title, personal review of each film, personal rating and
     - Star Rating 
 - Data is stored in a MySQL database, and the application provides REST endpoints to interact with this data.
 
+## Features :sparkles:
+- RESTful API with CRUD operations for movie tracking.
+- OpenAPI specification for API documentation.
+- Docker containerization for ease of deployment.
+- Integration with MySQL database.
+- Logging and Exception handling.
+
 ## How We Have Achieved This
 
 1. **Spring Boot Application**: A Spring Boot application was created  using the Spring Initializr to generate the necessary project structure.
@@ -32,7 +39,7 @@ exception handling features.
 easier deployment and scalability.
 7. **Logging**: We used SLF4J for logging throughout the application.
 
-## Manual Test Plan:
+## Manual Test Plan: :clipboard:
 
 1. **Add a Movie**
 - Input valid movie details (title, review, date added and star(s).
@@ -85,61 +92,23 @@ than by features. Each layer has a specific role:
 - Request Body: JSON object with updated movie details.
 - Response: Success message and the updated movie object.
 
-### OpenAPI Specification
 
-The OpenAPI specification for the REST API can be accessed at:
-- [**OpenAPI JSON Spec**](http://localhost:8080/v3/api-docs)
-- [**Swagger UI**](http://localhost:8080/swagger-ui.html)
-
-### Manual Testing of API
-+ [**Postman**](https://www.postman.com/)
-+ [**Insomnia**](https://insomnia.rest/)
-
-
-## Database Setup
-
-1. **MySQL**:  
-   A MySQL database was created using MySQL Workbench. The database schema will include a `movies` table with columns
-   corresponding to the movie attributes (title, director, etc.).
-
-2. **JPA Entities**:  
-   An entity class `Movie` was created that maps to the `movies` table in the database, and a repository interface
-   `MovieRepository` to handle CRUD operations.
-
-3. **MySQL Script**:  
-   The MySQL script for creating and initializing the database is provided in the `SQL` directory of the project.
-
-## Running Instructions
-
-**1. Prerequisites**:
-- Java 21
-- IntelliJ Idea
-- MySQL (using DBeaver or WorkBench)
-- Docker (for containerization)
-
-**2. Steps**:
-- Clone the repository.
-- Set up the database using the MySQL script provided.
-- Run the application using `./mvnw spring-boot:run`.
-- Access the application at `http://localhost:8080`.
-
-## Editing Configuration
-To change any configuration such as database credentials, edit the .env file
-
-#### **Example .env file:**
-
-````
-SPRING_DATASOURCE_URL= url
-SPRING_DATASOURCE_USERNAME= username
-SPRING_DATASOURCE_PASSWORD= password
-
-````
+```mermaid
+    graph TD;
+    Client -->|HTTP Request| MovieController;
+    MovieController -->|GET/POST/PUT/DELETE| MovieRepository;
+    MovieRepository -->|Query Database| MySQL[(MySQL Database)];
+    MySQL -->|Return Data| MovieRepository;
+    MovieRepository -->|Return Object| MovieController;
+    MovieController -->|HTTP Response| Client;
+```
 
 ## Testing Subscription Controller MVC Test
 
 Unit tests were written for the `MovieController` using Spring's Mvc framework in combination with Mockito. The aim was
 to validate the functionality by simulating HTTP requests and checking the responses without running the full Spring
 Boot application server.
+
 This file contains 14 tests:
 + updateMovie_ShouldUpdateMovie_when_MovieExists()
 + updateMovie_ShouldReturn404_when_MovieDoesNotExists()
@@ -156,48 +125,93 @@ This file contains 14 tests:
 + when_addedMovie_InvalidStarRating ()
 + when_addedMovie_UnexpectedError ()
 
+### OpenAPI Specification
 
-### Docker Setup
-#### Understanding the Docker Compose Configuration:
+The OpenAPI specification for the REST API can be accessed at:
+- [**OpenAPI JSON Spec**](http://localhost:8080/v3/api-docs)
+- [**Swagger UI**](http://localhost:8080/swagger-ui.html)
+
+### Manual Testing of API
++ [**Postman**](https://www.postman.com/)
++ [**Insomnia**](https://insomnia.rest/)
+
+
+## Database Setup
+
+1. **MySQL Setup**:  
+    - Use the MySQL script provided in `src/main/resources/database/` to set up the database.
+
+2. **JPA Entities**:  
+   An entity class `Movie` was created that maps to the `movies` table in the database, and a repository interface
+   `MovieRepository` to handle CRUD operations.
+
+## Running Instructions
+
+#### **Prerequisites**:
+- Java 21
+- IntelliJ Idea (IDE)
+- MySQL DBeaver or WorkBench
+- Docker Desktop 
+
+#### **Steps**:
+- Clone the repository.
+- Set up the database using the MySQL script provided.
+- Run the application using `./mvnw spring-boot:run` in terminal or run in IntelliJ
+- Access the application at `http://localhost:8080`.
+
+## Editing Environment Configuration
+To edit database settings, modify the `.env` file with your credentials:
+
+#### **Example .env file:**
+
+````
+SPRING_DATASOURCE_URL= url
+SPRING_DATASOURCE_USERNAME= username
+SPRING_DATASOURCE_PASSWORD= password
+
+````
+
+## Docker Setup :whale:
+### Understanding the Docker Compose Configuration:
 This project uses Docker Compose to run the following services:
 
 1. App (Spring Boot Application): Runs the your-app-name.jar inside a Docker container.
 2. MySQL Database: Runs MySQL 8.0 and initializes the MovieTrackerDB database.
 
+The `src/main/resources/database/` directory contains SQL scripts that will automatically execute when the MySQL container is created. Ensure that all initialization SQL files (such as table schemas and seed data) are placed inside this directory.
 
-The database/ directory contains SQL scripts that will automatically be executed when the database container is created.
-Place any initialization SQL files (such as table schemas and seed data) inside src/main/resources/database/.
+### Using the Dockerfile
 
-#### Using the Dockerfile
-The Dockerfile builds a Docker image of the Spring Boot application:
+The Dockerfile is used to build a Docker image of the Spring Boot application:
 
-+ The target/your-app-name.jar is copied into the Docker container.
-+ The app runs on port 8080.
-+
-#### The docker-compose.yml file:
-Configures the Spring Boot application and MySQL database to run together.
-Sets up environment variables for database configuration.
+- It copies the `target/your-app-name.jar` file into the Docker container.
+- The application runs on port `8080`.
 
-Once the application is running, you can interact with it via HTTP requests.
+The `docker-compose.yml` file configures both the Spring Boot application and the MySQL database to run together and sets up environment variables for the database configuration.
+
+Once the application is running, you can interact with it using HTTP requests.
 
 ## Running the Application with Docker 
-The below example demonstrates how to connect a java-group-project to a MySQL database using Docker.
-The Library Service will send data to the database via endpoints, which can then be testing in Postman.
+This section demonstrates how to connect the `java-group-project` application to a MySQL database using Docker. 
+The CineLog application will communicate with the database, and you can test its endpoints in Postman.
 
 **The process consists of three parts:**
 
-+ Creating a MySQL Image
-+ Creating an Image for the CineLog Application
-+ Running the docker-compose.yml file to allow the two images to communicate.
+1. **Creating a MySQL Image**
+2. **Creating an Image for the CineLog Application**
+3. **Running the `docker-compose.yml` file** to allow both services to communicate.
 
+### Step 1: Create a MySQL Image
 
-1. Download the MySQL image using Docker Desktop or the terminal.
+Download the MySQL image using Docker Desktop or the terminal:
+
 ````
 docker pull mysql
 ````
-2. Create an Image for the CineLog App
-Create the JAR file for your application in IntelliJ through the maven tab, under the LifeCycle directory execute clean
-then package. This will generate a JAR file for your Spring Boot application in the target/ directory.
+### Step 2: Create an Image for the CineLog Application
+Create the JAR file for your application in IntelliJ through the maven tab, under the LifeCycle directory execute `clean`
+then `package`. This will generate a JAR file for your Spring Boot application in the `target/` directory.
+
 Example :
 ````
 java-group-project-0.0.1-SNAPSHOT.jar
@@ -206,8 +220,9 @@ If everything is correct, the program should run, and you’ll be able to access
 Postman without needing to run the program from IntelliJ. Since you're now running it from the executable file, 
 once you're done testing, you can safely close it.
 
-#### Create Dockerfile and place in root directory.
-file contents should be:
+### Step 3: Create Dockerfile
+In the root directory of the project, create a `Dockerfile`:
+
 ```
  FROM eclipse-temurin:21-jdk     # Adujust if usuing java 22 (or whatever you are using)
  WORKDIR /src
@@ -215,14 +230,14 @@ file contents should be:
  EXPOSE 8080
  ENTRYPOINT ["java", "-jar", "java-group-project.jar"]
 ```
-Build the Docker Image with the command:
+### Step 4: Build the Docker Image
+To build the Docker image, run the following command:
+
 ````
 docker build -t java-group-project
 ````
-
-Verify on DockerDesktop that both Images are there.
-
-Create the docker-compose.yml file in the root directory of the project.
+### Step 5: Create the `docker-compose.yml` File
+Create a `docker-compose.yml` file in the root directory of your project:
 
 ```
 services:
@@ -245,38 +260,38 @@ ports:
 environment:
 SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/MovieTrackerDB  # Specifies the JDBC URL to connect to the MySQL database running in the 'db' container.
 SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver  # Sets the MySQL JDBC driver class.
-SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}  # Username for connecting to the MySQL database.
-SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}  # Password for connecting to the MySQL database.
+SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}  
+SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}  
 ```
+This file sets up both the MySQL and Spring Boot application containers and ensures that they communicate with each other.
 
-+ Step 1: Start the Application with Docker Compose
-You can run the Spring Boot app and MySQL database using Docker Compose. The following command builds the Docker 
+### Step 6:  Start the Application with Docker Compose
+Run the Spring Boot app and MySQL database using Docker Compose. The following command builds the Docker 
 image and starts both services:
 ````
 docker-compose up 
 ````
 
-Step 2: Access the Application
+### Step 7:  Access the Application
 Once the containers are up, the application will be available at:
++ **Application**: `http://localhost:8080`
++ **MySQL Database**: `localhost:3306`
 
-```
-http://localhost:8080
-```
-The MySQL database will be running on port 3306. If you want to check MySQL via a MySQL client or use admin tools
+If you want to check MySQL via a MySQL client or use admin tools
 like MySQL Workbench, connect to localhost:3306 with the credentials:
 
 + Username: root
 + Password: yourpassword
 
 
-Step 3: Stopping the Application
+### Step 8:  Stopping the Application
 When you're done, stop the containers using:
 
 ```
 docker-compose down
 ```
 
-Step 4: Rebuilding the Containers
+### Step 9:  Rebuilding the Containers
 If you've made changes to your code or Dockerfile, rebuild the containers:
 
 ````
@@ -287,12 +302,21 @@ docker-compose up --build
 
 ## Deployment Plan
 
+```mermaid
+graph TD;
+Dev[Developer Pushes Code] --> GitHub[GitHub Repository];
+GitHub -->|Triggers| CI[GitHub Actions - CI Pipeline];
+CI -->|Builds| DockerImage[Docker Image];
+DockerImage -->|Pushes to| DockerHub[Docker Hub];
+DockerHub -->|Deploys to| Prod[Production Server];
+Prod -->|Runs| CineLogApp[CineLog App];
+````
 1. **Continuous Integration**:
 - GitHub Actions will be used for continuous integration, with stages for building, testing, and deploying the application.
 
 2. **Docker**:
-- The application is containerized using Docker. A Dockerfile and a `docker-compose.yaml` will be provided to run the
-  application along with a MySQL container.
+- The application is containerized using Docker. The `Dockerfile` and `docker-compose.yml` are provided to run 
+the application alongside a MySQL container.
 
 3. **Pipeline**:
 - **Stage 1**: Build and test the application.
