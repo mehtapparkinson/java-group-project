@@ -5,7 +5,7 @@
  ## Table of Contents
 1. [Project Overview](#project-overview)
 2. [Application Requirements (Must Haves)](#application-requirements-must-haves)
-3. [Features](#features)
+3. [Features](#features-)
 4. [How We Have Achieved This](#how-we-have-achieved-this)
     - [Spring Boot Application](#spring-boot-application)
     - [REST Endpoints](#rest-endpoints)
