@@ -3,9 +3,9 @@
 # CineLog: A Movie Tracker System :movie_camera: :film_strip:
 > ## Table of Contents
 >
-> 1. [Project Overview](#project-overview-)
+> 1. [Project Overview](#project-overview)
 > 2. [Application Requirements (Must Haves)](#application-requirements-must-haves)
-> 3. [Features](#features-)
+> 3. [Features](#features)
 > 4. [How We Have Achieved This](#how-we-have-achieved-this)
 >    - [Spring Boot Application](#spring-boot-application)
 >    - [REST Endpoints](#rest-endpoints)
@@ -14,7 +14,7 @@
 >    - [Exception Handling](#exception-handling)
 >    - [Docker](#docker)
 >    - [Logging](#logging)
-> 5. [Manual Test Plan](#manual-test-plan-)
+> 5. [Manual Test Plan](#manual-test-plan)
 > 6. [Project Architecture](#project-architecture)
 > 7. [RESTful Endpoints](#restful-endpoints)
 > 8. [Testing Subscription Controller MVC Test](#testing-subscription-controller-mvc-test)
@@ -23,7 +23,7 @@
 > 11. [Database Setup](#database-setup)
 > 12. [Running Instructions](#running-instructions)
 > 13. [Editing Environment Configuration](#editing-environment-configuration)
-> 14. [Docker Setup](#docker-setup-)
+> 14. [Docker Setup](#docker-setup)
 > 15. [Deployment Plan](#deployment-plan)
 
 
