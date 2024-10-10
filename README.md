@@ -1,31 +1,30 @@
 #### java group project - Team Json
 
 # CineLog: A Movie Tracker System :movie_camera: :film_strip:
-> ## Table of Contents
->
-> 1. [Project Overview](#project-overview)
-> 2. [Application Requirements (Must Haves)](#application-requirements-must-haves)
-> 3. [Features](#features)
-> 4. [How We Have Achieved This](#how-we-have-achieved-this)
->    - [Spring Boot Application](#spring-boot-application)
->    - [REST Endpoints](#rest-endpoints)
->    - [Database Integration](#database-integration)
->    - [Unit Testing](#unit-testing)
->    - [Exception Handling](#exception-handling)
->    - [Docker](#docker)
->    - [Logging](#logging)
-> 5. [Manual Test Plan](#manual-test-plan)
-> 6. [Project Architecture](#project-architecture)
-> 7. [RESTful Endpoints](#restful-endpoints)
-> 8. [Testing Subscription Controller MVC Test](#testing-subscription-controller-mvc-test)
-> 9. [OpenAPI Specification](#openapi-specification)
-> 10. [Manual Testing of API](#manual-testing-of-api)
-> 11. [Database Setup](#database-setup)
-> 12. [Running Instructions](#running-instructions)
-> 13. [Editing Environment Configuration](#editing-environment-configuration)
-> 14. [Docker Setup](#docker-setup)
-> 15. [Deployment Plan](#deployment-plan)
 
+ ## Table of Contents
+1. [Project Overview](#project-overview)
+2. [Application Requirements (Must Haves)](#application-requirements-must-haves)
+3. [Features](#features)
+4. [How We Have Achieved This](#how-we-have-achieved-this)
+    - [Spring Boot Application](#spring-boot-application)
+    - [REST Endpoints](#rest-endpoints)
+    - [Database Integration](#database-integration)
+    - [Unit Testing](#unit-testing)
+    - [Exception Handling](#exception-handling)
+    - [Docker](#docker)
+    - [Logging](#logging)
+5. [Manual Test Plan](#manual-test-plan) 
+6. [Project Architecture](#project-architecture)
+7. [RESTful Endpoints](#restful-endpoints)
+8. [Testing Subscription Controller MVC Test](#testing-subscription-controller-mvc-test)
+9. [OpenAPI Specification](#openapi-specification)
+10. [Manual Testing of API](#manual-testing-of-api)
+11. [Database Setup](#database-setup)
+12. [Running Instructions](#running-instructions)
+13. [Editing Environment Configuration](#editing-environment-configuration)
+14. [Docker Setup](#docker-setup)
+15. [Deployment Plan](#deployment-plan)
 
 ## Project Overview :clapper:
 
