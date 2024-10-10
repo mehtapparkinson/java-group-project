@@ -64,7 +64,15 @@ than by features. Each layer has a specific role:
 - **Controller**: `MovieController` handles incoming API requests and directing them to the appropriate service.
 - **Repository**: `MovieRepository` interfaces with the database.
 - **Model**: `Movie` represents the data model for the Movies table.
-
+```mermaid
+flowchart TD
+   A[java-group-project] --> B[controller]
+   A --> C[model]
+   A --> D[repository]
+   B --> E[MovieController]
+   C --> F[Movie]
+   D --> G[MovieRepository]
+```
 ## RESTful Endpoints
 
 1. **Add a Movie**
@@ -304,22 +312,29 @@ docker-compose up --build
 
 ```mermaid
 graph TD;
-Dev[Developer Pushes Code] --> GitHub[GitHub Repository];
-GitHub -->|Triggers| CI[GitHub Actions - CI Pipeline];
-CI -->|Builds| DockerImage[Docker Image];
-DockerImage -->|Pushes to| DockerHub[Docker Hub];
-DockerHub -->|Deploys to| Prod[Production Server];
-Prod -->|Runs| CineLogApp[CineLog App];
-````
+A[Developer Pushes Code] -->|Triggers Pipeline| B[GitHub Actions CI];
+B --> C[Checkout Latest Code];
+C --> D[Maven Build];
+D --> E[Unit Testing with JUnit];
+E --> F{Tests Passed?};
+F -- Yes --> G[Build Docker Image];
+F -- No --> Z[Abort Pipeline & Send Error Notification];
+G --> H[Integration Testing with Docker Compose];
+H --> I{Tests Passed?};
+I -- Yes --> J[Push Docker Image to Registry];
+J --> K[Deploy to Production using Docker Compose];
+K --> L[Monitor Logs & Send Notifications];
+I -- No --> Z;
+```
+
 1. **Continuous Integration**:
 - GitHub Actions will be used for continuous integration, with stages for building, testing, and deploying the application.
 
 2. **Docker**:
-- The application is containerized using Docker. The `Dockerfile` and `docker-compose.yml` are provided to run 
-the application alongside a MySQL container.
+- The application is containerized using Docker. The `Dockerfile` and `docker-compose.yml` are provided to run
+  the application alongside a MySQL container.
 
 3. **Pipeline**:
 - **Stage 1**: Build and test the application.
 - **Stage 2**: Build Docker image.
 - **Stage 3**: Deploy the application using Docker Compose.
-
